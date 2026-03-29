@@ -171,6 +171,25 @@ body{
 .esp-total-drops strong{color:var(--gold);font-size:.85rem;}
 .esp-cooldown{font-size:.68rem;color:#888;text-align:center;margin-top:4px;}
 
+/* ── iOS Direct Link ── */
+.esp-ios-link-box{
+  margin-top:12px;padding:12px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px dashed rgba(201,169,110,.25);
+  text-align:center;
+}
+.esp-ios-link-box .ios-label{
+  font-size:.74rem;color:#999;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.esp-ios-link-box .ios-label .apple-icon{font-size:1rem;}
+.esp-ios-link-box a{
+  display:inline-block;padding:8px 18px;border-radius:8px;
+  background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);
+  color:var(--gold);font-size:.78rem;font-weight:600;
+  text-decoration:none;word-break:break-all;line-height:1.5;
+  transition:.15s;
+}
+.esp-ios-link-box a:active{background:rgba(201,169,110,.25);transform:scale(.97);}
+
 .chat-page{display:flex;flex-direction:column;height:100%;}
 .chat-header{padding:14px 16px;text-align:center;border-bottom:1px solid var(--border);flex-shrink:0;}
 .chat-header h2{font-size:1.05rem;background:linear-gradient(90deg,var(--gold),var(--gold-dim));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -451,6 +470,12 @@ body{
         <p class="esp-format" id="esp-format-info"></p>
         <p class="esp-status" id="esp-status"></p>
         <p class="esp-cooldown" id="esp-cooldown"></p>
+
+        <!-- ★ iOS / iPad Direct Link ★ -->
+        <div class="esp-ios-link-box" id="esp-ios-link-box">
+          <div class="ios-label"><span class="apple-icon">🍎</span> <span id="esp-ios-label">iPhone and iPad please click this link</span></div>
+          <a id="esp-ios-link" href="#" target="_blank" rel="noopener noreferrer"></a>
+        </div>
       </div>
     </div>
 
@@ -630,7 +655,8 @@ const ui={
     espTotalDrops:'Total: <strong>{n}</strong> drops',
     espBusy:'⏳ Diffuser is busy — please wait',
     espCooldown:'Please wait {n}s before sending again…',
-    espResponse:'ESP32 response: '
+    espResponse:'ESP32 response: ',
+    espIosLabel:'🍎 iPhone and iPad please click this link'
   },
   zh:{
     loading:'系統載入中…',
@@ -700,7 +726,8 @@ const ui={
     espTotalDrops:'總計：<strong>{n}</strong> 滴',
     espBusy:'⏳ 擴香儀忙碌中——請稍候',
     espCooldown:'請等待 {n} 秒後再傳送…',
-    espResponse:'ESP32 回應：'
+    espResponse:'ESP32 回應：',
+    espIosLabel:'🍎 iPhone 和 iPad 請點擊此連結'
   }
 };
 function t(k){return(ui[currentLang]&&ui[currentLang][k])||ui.en[k]||k;}
@@ -838,6 +865,7 @@ function applyLanguage(){
   $('esp-send-label').textContent=t('espSendLabel');
   $('esp-test-label').textContent=t('espTestLabel');
   $('esp-wifi-text').innerHTML=t('espWifiText');
+  $('esp-ios-label').textContent=t('espIosLabel');
   const navLabels=document.querySelectorAll('.nav-label');
   ['navAroma','navChat','navShop'].forEach((k,i)=>{if(navLabels[i])navLabels[i].textContent=t(k);});
   renderAromaBubbles();renderCatTabs();renderProducts();renderCombos();renderAccessories();renderChips();renderCartDrawer();
@@ -1023,9 +1051,20 @@ function adjustEspDrop(key, delta){
   updateEspTotalDrops();
 }
 
-function updateEspFormatInfo(){
+function getEspUrl(){
   const ip=$('esp32-ip').value.trim()||'172.20.10.2';
-  $('esp-format-info').textContent=t('espFormatPrefix')+`http://${ip}/formula?red=${resultDrops.r}&green=${resultDrops.g}&blue=${resultDrops.b}`;
+  return `http://${ip}/formula?red=${resultDrops.r}&green=${resultDrops.g}&blue=${resultDrops.b}`;
+}
+
+function updateEspFormatInfo(){
+  const url=getEspUrl();
+  $('esp-format-info').textContent=t('espFormatPrefix')+url;
+  // Update iOS direct link
+  const linkEl=$('esp-ios-link');
+  if(linkEl){
+    linkEl.href=url;
+    linkEl.textContent=url;
+  }
 }
 
 function updateEspTotalDrops(){
@@ -1051,14 +1090,12 @@ async function testESP32(){
   try{
     const controller=new AbortController();
     const tid=setTimeout(()=>controller.abort(),4000);
-    /* Try CORS first to read response */
     let ok=false;
     try{
       const res=await fetch(`http://${ip}/`,{signal:controller.signal,cache:'no-store'});
       clearTimeout(tid);
       ok=true;
     }catch(e1){
-      /* CORS blocked — try no-cors (opaque response = still reachable) */
       try{
         const controller2=new AbortController();
         const tid2=setTimeout(()=>controller2.abort(),4000);
@@ -1108,7 +1145,6 @@ async function sendToESP32(){
   let responseText='';
   let isBusy=false;
 
-  /* Strategy: try CORS first (to read body), then no-cors as fallback */
   try{
     const controller=new AbortController();
     const tid=setTimeout(()=>controller.abort(),6000);
@@ -1121,7 +1157,6 @@ async function sendToESP32(){
       success=true;
     }
   }catch(corsErr){
-    /* CORS failed — try no-cors (request still reaches ESP32) */
     try{
       const controller2=new AbortController();
       const tid2=setTimeout(()=>controller2.abort(),6000);
@@ -1151,7 +1186,6 @@ async function sendToESP32(){
     statusEl.style.color='var(--green)';
     showToast(t('espSent'));
 
-    /* Cooldown: prevent rapid re-sends (10 sec) */
     espCooldownSec=10;
     $('esp-cooldown').textContent=t('espCooldown').replace('{n}',espCooldownSec);
     espCooldownTimer=setInterval(()=>{
