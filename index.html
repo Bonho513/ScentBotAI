@@ -50,6 +50,7 @@ body{
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes typeDot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes espPulse{0%,100%{box-shadow:0 0 0 0 rgba(91,141,238,.3)}50%{box-shadow:0 0 0 8px rgba(91,141,238,0)}}
 .phase{display:none;flex-direction:column;align-items:center;width:100%;max-width:480px;margin:0 auto;padding:20px 16px;animation:fadeUp .45s ease;}
 .phase.active{display:flex;}
 .btn-main{padding:14px 36px;border:none;border-radius:40px;font-size:.95rem;font-family:inherit;cursor:pointer;font-weight:600;color:#1a1a2e;background:linear-gradient(135deg,var(--gold),#e8d5a3);box-shadow:0 4px 18px rgba(201,169,110,.25);transition:.15s;min-height:48px;}
@@ -109,6 +110,67 @@ body{
 .blend-recipe{font-size:.8rem;color:#bbb;line-height:1.8;margin-bottom:10px;}
 .blend-use{font-size:.76rem;color:#999;line-height:1.6;padding:10px;background:rgba(0,0,0,.2);border-radius:8px;}
 .blend-use strong{color:var(--gold);font-weight:600;}
+
+/* ── ESP32 Control Card (ENHANCED) ── */
+.esp-card{width:100%;padding:16px;border-radius:14px;border:1px solid rgba(91,141,238,.25);background:linear-gradient(135deg,rgba(91,141,238,.06),rgba(76,175,122,.06));position:relative;overflow:hidden;}
+.esp-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(91,141,238,.08),transparent 70%);pointer-events:none;}
+.esp-wifi-banner{
+  display:flex;align-items:center;gap:8px;padding:10px 12px;margin-bottom:12px;
+  border-radius:10px;background:rgba(91,141,238,.1);border:1px solid rgba(91,141,238,.2);
+  font-size:.76rem;color:var(--blue);line-height:1.5;
+}
+.esp-wifi-banner .wifi-icon{font-size:1.2rem;flex-shrink:0;animation:espPulse 2s ease-in-out infinite;}
+.esp-wifi-banner strong{color:#7aa3f0;}
+.esp-drops-preview{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.esp-drop-item{
+  display:flex;align-items:center;gap:6px;padding:8px 10px;
+  border-radius:10px;background:rgba(0,0,0,.2);border:1px solid var(--border);
+  font-size:.78rem;flex:1;min-width:0;
+}
+.esp-drop-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+.esp-drop-name{color:var(--cream);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}
+.esp-drop-val{color:var(--gold);font-weight:700;font-size:.85rem;flex-shrink:0;}
+/* Drop adjustment buttons */
+.esp-drop-adj{display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:2px;}
+.esp-drop-adj button{
+  width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.06);color:var(--cream);font-size:.85rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:.15s;font-family:inherit;padding:0;line-height:1;
+}
+.esp-drop-adj button:active{background:rgba(201,169,110,.2);border-color:var(--gold);transform:scale(.9);}
+.esp-input-row{display:flex;gap:8px;align-items:center;}
+.esp-input-row input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--cream);font-family:inherit;font-size:16px;outline:none;transition:.2s;min-width:0;}
+.esp-input-row input:focus{border-color:var(--blue);}
+.esp-input-row input::placeholder{color:#555;}
+.esp-test-btn{
+  padding:10px 14px;border:none;border-radius:10px;min-height:44px;
+  background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--cream);
+  font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:.15s;
+  white-space:nowrap;display:flex;align-items:center;gap:4px;flex-shrink:0;
+}
+.esp-test-btn:active{background:rgba(201,169,110,.12);border-color:var(--gold);transform:scale(.96);}
+.esp-test-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+.esp-send-btn{
+  padding:10px 20px;border:none;border-radius:10px;min-height:44px;
+  background:linear-gradient(135deg,var(--blue),#7aa3f0);color:#fff;
+  font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s;
+  white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0;
+}
+.esp-send-btn:active{transform:scale(.96);}
+.esp-send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+.esp-send-btn.sending{animation:espPulse 1s ease-in-out infinite;}
+.esp-send-btn.success{background:linear-gradient(135deg,var(--green),#6fcf97);}
+.esp-send-btn.error{background:linear-gradient(135deg,var(--red),#f07080);}
+.esp-format{font-size:.65rem;color:#666;margin-top:8px;word-break:break-all;line-height:1.5;}
+.esp-status{font-size:.76rem;margin-top:8px;min-height:20px;text-align:center;font-weight:600;line-height:1.5;}
+.esp-total-drops{
+  text-align:center;font-size:.72rem;color:var(--gold-dim);margin-bottom:10px;
+  padding:6px;background:rgba(0,0,0,.15);border-radius:8px;
+}
+.esp-total-drops strong{color:var(--gold);font-size:.85rem;}
+.esp-cooldown{font-size:.68rem;color:#888;text-align:center;margin-top:4px;}
+
 .chat-page{display:flex;flex-direction:column;height:100%;}
 .chat-header{padding:14px 16px;text-align:center;border-bottom:1px solid var(--border);flex-shrink:0;}
 .chat-header h2{font-size:1.05rem;background:linear-gradient(90deg,var(--gold),var(--gold-dim));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -163,7 +225,6 @@ body{
 .prod-card .pc-bottom{display:flex;align-items:center;justify-content:space-between;}
 .prod-card .pc-price{font-size:.78rem;font-weight:700;color:var(--gold);}
 .prod-card .pc-price .pc-cur{font-size:.58rem;font-weight:500;color:var(--gold-dim);margin-right:1px;}
-.prod-card .pc-price .pc-unit{font-size:.58rem;font-weight:400;color:#777;}
 .prod-card .pc-add{width:34px;height:34px;border:none;border-radius:50%;background:rgba(201,169,110,.15);color:var(--gold);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
 .prod-card .pc-add:active{background:var(--gold);color:var(--bg);transform:scale(.9);}
 .prod-card .pc-sold{position:absolute;top:6px;right:6px;font-size:.58rem;padding:2px 7px;border-radius:10px;font-weight:600;z-index:2;}
@@ -284,7 +345,6 @@ body{
 .toast{position:fixed;top:calc(16px + var(--safe-t));left:50%;transform:translateX(-50%) translateY(-60px);background:var(--bg2);border:1px solid var(--gold);border-radius:12px;padding:10px 20px;font-size:.8rem;color:var(--gold);z-index:600;transition:.3s;opacity:0;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 
-/* ── Language Toggle ── */
 .lang-toggle{
   position:fixed;top:calc(8px + var(--safe-t));right:12px;z-index:150;
   display:flex;border:1px solid var(--border);border-radius:20px;overflow:hidden;
@@ -294,25 +354,19 @@ body{
 .lang-btn{
   padding:6px 14px;border:none;background:transparent;color:#666;
   font-family:inherit;font-size:.72rem;font-weight:600;cursor:pointer;
-  transition:.2s;white-space:nowrap;min-height:32px;
-  display:flex;align-items:center;
+  transition:.2s;white-space:nowrap;min-height:32px;display:flex;align-items:center;
 }
 .lang-btn.active{background:linear-gradient(135deg,var(--gold),#e8d5a3);color:var(--bg);}
-.lang-btn:not(.active):hover{color:var(--cream);background:rgba(255,255,255,.05);}
 
 @media(max-width:380px){
   .product-grid{grid-template-columns:1fr 1fr;gap:8px;}
-  .prod-card .pc-info{padding:8px;}
-  .prod-card .pc-name{font-size:.78rem;}
-  .prod-card .pc-price{font-size:.72rem;}
+  .prod-card .pc-info{padding:8px;}.prod-card .pc-name{font-size:.78rem;}.prod-card .pc-price{font-size:.72rem;}
   .prod-card .pc-add{width:30px;height:30px;font-size:.95rem;}
-  .welcome-logo{font-size:2.2rem;margin-top:16px;}
-  .g-title{font-size:1.2rem;}
-  .cam-wrap{width:150px;height:150px;}
-  .prog-bar{width:150px;}
-  .shop-hero h1{font-size:1.2rem;}
-  .combo-card .cc-title{font-size:.82rem;}
-  .ms-body .ms-name{font-size:1.1rem;}
+  .welcome-logo{font-size:2.2rem;margin-top:16px;}.g-title{font-size:1.2rem;}
+  .cam-wrap{width:150px;height:150px;}.prog-bar{width:150px;}
+  .shop-hero h1{font-size:1.2rem;}.combo-card .cc-title{font-size:.82rem;}.ms-body .ms-name{font-size:1.1rem;}
+  .esp-drops-preview{flex-direction:column;}
+  .esp-drop-item{padding:6px 8px;}
 }
 @media(max-width:320px){.product-grid{grid-template-columns:1fr;}}
 @media(max-height:500px){.cam-wrap{width:130px;height:130px;}.prog-bar{width:130px;}.welcome-logo{margin-top:8px;font-size:2rem;}.ana-wrap{padding:20px;}}
@@ -324,7 +378,6 @@ body{
 <div id="loader"><div class="sp"></div><p id="loader-text">Loading system…</p></div>
 <div class="toast" id="toast"></div>
 
-<!-- Language Toggle -->
 <div class="lang-toggle">
   <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
   <button class="lang-btn" id="lang-zh" onclick="setLang('zh')">中文</button>
@@ -374,6 +427,33 @@ body{
     <div class="res-sec"><p class="res-label" id="lbl-emotion">Emotion Analysis</p><div class="res-mood"><div class="rm-e" id="rm-e"></div><div><div class="rm-l" id="rm-l"></div><div class="rm-d" id="rm-d"></div></div></div></div>
     <div class="res-sec"><p class="res-label" id="lbl-aromas">Recommended Aromas</p><div id="oil-container"></div></div>
     <div class="res-sec"><p class="res-label" id="lbl-blend">Blending Advice</p><div class="blend-card" id="blend-card"></div></div>
+
+    <!-- ★★★ ESP32 Diffuser Control — ENHANCED ★★★ -->
+    <div class="res-sec" id="esp-section">
+      <p class="res-label" id="lbl-esp">📡 Diffuser Control</p>
+      <div class="esp-card">
+        <!-- WiFi connection reminder -->
+        <div class="esp-wifi-banner" id="esp-wifi-banner">
+          <span class="wifi-icon">📶</span>
+          <span id="esp-wifi-text">Connect WiFi: <strong>Bon</strong> (Password: <strong>00000000</strong>) before sending</span>
+        </div>
+
+        <!-- Drop amounts with adjustment buttons -->
+        <div class="esp-drops-preview" id="esp-preview"></div>
+        <div class="esp-total-drops" id="esp-total-drops"></div>
+
+        <!-- IP input + Test + Send -->
+        <div class="esp-input-row">
+          <input type="text" id="esp32-ip" placeholder="172.20.10.2" value="172.20.10.2">
+          <button class="esp-test-btn" id="esp-test-btn" onclick="testESP32()">🔍 <span id="esp-test-label">Test</span></button>
+          <button class="esp-send-btn" id="esp-send-btn" onclick="sendToESP32()">📡 <span id="esp-send-label">Send</span></button>
+        </div>
+        <p class="esp-format" id="esp-format-info"></p>
+        <p class="esp-status" id="esp-status"></p>
+        <p class="esp-cooldown" id="esp-cooldown"></p>
+      </div>
+    </div>
+
     <div style="display:flex;gap:10px;justify-content:center;margin:10px 0 20px;flex-wrap:wrap;">
       <button class="btn-ghost" id="btn-restart">🔄 Restart</button>
       <button class="btn-main" id="btn-go-shop" style="font-size:.85rem;">🛒 Go to Shop</button>
@@ -467,6 +547,7 @@ body{
   </div>
 </div>
 
+
 <!-- BOTTOM NAV -->
 <nav id="bottom-nav">
   <button class="nav-btn active" data-page="page1"><span class="nav-icon">🌿</span><span class="nav-label">Aroma</span></button>
@@ -474,12 +555,10 @@ body{
   <button class="nav-btn" data-page="page3"><span class="nav-icon">🛍️</span><span class="nav-label">Shop</span><span class="cart-badge" id="nav-badge">0</span></button>
 </nav>
 
+
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════
-   🌐 i18n — Bilingual Translation System
-   ═══════════════════════════════════════════════════ */
 let currentLang='en';
 
 const ui={
@@ -501,6 +580,7 @@ const ui={
     anaSub:'Combining emotion analysis & questionnaire data',
     resTitle:'Your Bespoke Aroma Formula',
     lblEmotion:'Emotion Analysis',lblAromas:'Recommended Aromas',lblBlend:'Blending Advice',
+    lblEsp:'📡 Diffuser Control',
     btnRestart:'🔄 Restart',btnGoShop:'🛒 Go to Shop',
     blendRatio:'🧪 Recommended Ratio',blendUsage:'📋 Usage',blendTips:'💡 Tips',
     blendTip1:'Use for 1-2 weeks to observe changes',blendTip2:'Patch-test if you have sensitive skin',
@@ -529,7 +609,7 @@ const ui={
     ckFillFields:'⚠️ Please fill required fields',
     successH:'Order Placed!',successP:'Thank you! We will ship your order as soon as possible.',successOK:'OK',
     ingredients:'Ingredients: ',reviews:'Reviews',addBtn:'🛒 Add',
-    bubbleSun:'Sun',bubbleWarm:'Warm',bubbleCalm:'Calm',bubbleForest:'Forest',bubbleZen:'Zen',
+    bubbleWarm:'Warm',bubbleCalm:'Calm',bubbleForest:'Forest',
     feelRelax:'Relaxation',feelEnergy:'Energy',feelFocus:'Focus',feelWarmth:'Warmth',feelBalance:'Balance',
     resIntro:'Based on your "{mood}" state and desire for "{feel}", here is your formula.',
     method0:'Diffuse 15-20 min after waking',method1:'Diffuse at your workspace, 30 min sessions',
@@ -537,7 +617,20 @@ const ui={
     qStep:'Q {n} / {total}',setItems:'Set · {n} items',
     chipSleep:'💤 Insomnia',chipStress:'😩 Stress',chipMeditate:'🧘 Meditate',chipSafety:'⚠️ Safety',chipProducts:'🛒 Products',
     chipQSleep:'What aroma helps with insomnia?',chipQStress:'Any essential oils for work stress?',
-    chipQMeditate:'Which aroma is best for meditation?',chipQSafety:'Can oils be applied directly on skin?',chipQProducts:'Please introduce your five products'
+    chipQMeditate:'Which aroma is best for meditation?',chipQSafety:'Can oils be applied directly on skin?',chipQProducts:'Please introduce your five products',
+    espSendLabel:'Send',espSending:'Sending…',
+    espSent:'✅ Sent to diffuser!',espFail:'⚠️ Connection failed — check WiFi & IP',
+    espNoIP:'⚠️ Please enter ESP32 IP address',
+    espNoDrops:'⚠️ All drops are 0 — nothing to send',
+    espDataLabel:'Drops data to send:',
+    espFormatPrefix:'Request: ',
+    espWifiText:'Connect WiFi: <strong>Bon</strong> (Password: <strong>00000000</strong>) before sending',
+    espTestLabel:'Test',espTesting:'Testing…',
+    espTestOK:'✅ ESP32 is reachable!',espTestFail:'❌ Cannot reach ESP32',
+    espTotalDrops:'Total: <strong>{n}</strong> drops',
+    espBusy:'⏳ Diffuser is busy — please wait',
+    espCooldown:'Please wait {n}s before sending again…',
+    espResponse:'ESP32 response: '
   },
   zh:{
     loading:'系統載入中…',
@@ -557,6 +650,7 @@ const ui={
     anaSub:'結合情緒分析與問卷數據',
     resTitle:'你的專屬芳療配方',
     lblEmotion:'情緒分析',lblAromas:'推薦精油',lblBlend:'調配建議',
+    lblEsp:'📡 擴香儀控制',
     btnRestart:'🔄 重新開始',btnGoShop:'🛒 前往商店',
     blendRatio:'🧪 建議比例',blendUsage:'📋 使用方式',blendTips:'💡 小提醒',
     blendTip1:'持續使用 1-2 週觀察變化',blendTip2:'敏感肌膚請先做貼片測試',
@@ -585,7 +679,7 @@ const ui={
     ckFillFields:'⚠️ 請填寫必要欄位',
     successH:'訂單已送出！',successP:'感謝您！我們會盡快為您出貨。',successOK:'確定',
     ingredients:'成分：',reviews:'用戶評價',addBtn:'🛒 加入',
-    bubbleSun:'陽光',bubbleWarm:'暖心',bubbleCalm:'寧靜',bubbleForest:'森林',bubbleZen:'禪意',
+    bubbleWarm:'暖心',bubbleCalm:'寧靜',bubbleForest:'森林',
     feelRelax:'放鬆',feelEnergy:'活力',feelFocus:'專注',feelWarmth:'溫暖',feelBalance:'平衡',
     resIntro:'根據你的「{mood}」狀態和對「{feel}」的需求，以下是你的專屬配方。',
     method0:'起床後擴香 15-20 分鐘',method1:'工作區擴香，每次 30 分鐘',
@@ -593,12 +687,23 @@ const ui={
     qStep:'第 {n} 題 / 共 {total} 題',setItems:'套裝 · {n} 件',
     chipSleep:'💤 失眠',chipStress:'😩 壓力',chipMeditate:'🧘 冥想',chipSafety:'⚠️ 安全',chipProducts:'🛒 產品',
     chipQSleep:'什麼精油有助改善失眠？',chipQStress:'有推薦紓壓的精油嗎？',
-    chipQMeditate:'哪種精油適合冥想？',chipQSafety:'精油可以直接塗在皮膚上嗎？',chipQProducts:'請介紹你們的五款產品'
+    chipQMeditate:'哪種精油適合冥想？',chipQSafety:'精油可以直接塗在皮膚上嗎？',chipQProducts:'請介紹你們的五款產品',
+    espSendLabel:'傳送',espSending:'傳送中…',
+    espSent:'✅ 已傳送到擴香儀！',espFail:'⚠️ 連線失敗——請確認已連接 Bon WiFi',
+    espNoIP:'⚠️ 請輸入 ESP32 IP 位址',
+    espNoDrops:'⚠️ 所有滴數都是 0——無需傳送',
+    espDataLabel:'傳送滴數：',
+    espFormatPrefix:'請求：',
+    espWifiText:'傳送前請先連接 WiFi：<strong>Bon</strong>（密碼：<strong>00000000</strong>）',
+    espTestLabel:'測試',espTesting:'測試中…',
+    espTestOK:'✅ 已連接到 ESP32！',espTestFail:'❌ 無法連接 ESP32',
+    espTotalDrops:'總計：<strong>{n}</strong> 滴',
+    espBusy:'⏳ 擴香儀忙碌中——請稍候',
+    espCooldown:'請等待 {n} 秒後再傳送…',
+    espResponse:'ESP32 回應：'
   }
 };
 function t(k){return(ui[currentLang]&&ui[currentLang][k])||ui.en[k]||k;}
-
-/* Bilingual helper for data objects: L({en:'...',zh:'...'}) → string */
 function L(v){if(v==null)return '';if(typeof v==='string')return v;return v[currentLang]||v.en||'';}
 
 const CUR='USD';const FREE_SHIP=80;
@@ -653,6 +758,14 @@ const products=[
   {id:'meditation',name:{en:'Meditation',zh:'冥想'},tagline:{en:'Spiritual Balance Blend',zh:'靈性平衡配方'},ingredients:{en:'Frankincense · Cedarwood · Sage',zh:'乳香·雪松·鼠尾草'},desc:{en:'An ancient sacred scent — frankincense and cedarwood weave a deep woody base, guiding you to inner stillness. Premium Omani frankincense.',zh:'古老的神聖香氣——乳香與雪松交織成深邃木質基調，引領你走向內心寧靜。頂級阿曼乳香。'},benefits:{en:['Meditative calm','Inner balance','Elevate spirit','Emotional stability'],zh:['冥想寧靜','內心平衡','提升靈性','情緒穩定']},reviews:[{name:'Yuki',stars:5,text:{en:'The frankincense is so serene during meditation.',zh:'冥想時乳香的味道好安詳。'}},{name:'Hong',stars:4,text:{en:'Rich woody scent — great for men too.',zh:'濃郁木質香——男生也很適合。'}}],color:'#D4CDC4',cat:'single',price:21,capacity:'10ml',bestseller:false,ms:[2,3,4,4,2,2,5],qs:[[4,1,2,3,3],[2,2,1,2,3],[2,5,1,1,3],[1,2,2,4,3],[4,1,2,3,5]]}
 ];
 
+const RESULT_IDS=['warmheart','serenity','forest'];
+const DROP_AMOUNTS=[3,2,1];
+
+let resultDrops={r:0,b:0,g:0};
+let resultScored=[];
+let espCooldownTimer=null;
+let espCooldownSec=0;
+
 const combos=[
   {id:'combo-relax',name:{en:'Relaxation & Sleep Set',zh:'放鬆助眠組合'},desc:{en:'Serenity + Warmheart — the perfect evening combo.',zh:'寧靜 + 暖心——完美的晚間組合。'},items:['serenity','warmheart'],originalPrice:42,price:34,colors:['#5B8DEE','#E8526E']},
   {id:'combo-energy',name:{en:'Energy & Focus Set',zh:'活力專注組合'},desc:{en:'Sunshine + Forest Breath — morning energy & work focus.',zh:'陽光 + 森呼吸——早晨活力與工作專注力。'},items:['sunshine','forest'],originalPrice:34,price:28,colors:['#F5C842','#4CAF7A']},
@@ -682,7 +795,6 @@ let cart=[];let modalQty=1;
 const $=id=>document.getElementById(id);
 const video=$('video');
 
-/* ═══ Language Switch ═══ */
 function setLang(lang){
   currentLang=lang;
   $('lang-en').classList.toggle('active',lang==='en');
@@ -692,7 +804,6 @@ function setLang(lang){
 }
 
 function applyLanguage(){
-  /* Static elements */
   $('loader-text').textContent=t('loading');
   $('welcome-title').textContent=t('welcomeTitle');
   $('welcome-desc').innerHTML=t('welcomeDesc');
@@ -707,6 +818,7 @@ function applyLanguage(){
   $('lbl-emotion').textContent=t('lblEmotion');
   $('lbl-aromas').textContent=t('lblAromas');
   $('lbl-blend').textContent=t('lblBlend');
+  $('lbl-esp').textContent=t('lblEsp');
   $('btn-restart').textContent=t('btnRestart');
   $('btn-go-shop').textContent=t('btnGoShop');
   $('chat-hdr-title').textContent=t('chatTitle');
@@ -723,26 +835,14 @@ function applyLanguage(){
   $('success-h').textContent=t('successH');
   $('success-p').textContent=t('successP');
   $('btn-success-ok').textContent=t('successOK');
-
-  /* Nav labels */
+  $('esp-send-label').textContent=t('espSendLabel');
+  $('esp-test-label').textContent=t('espTestLabel');
+  $('esp-wifi-text').innerHTML=t('espWifiText');
   const navLabels=document.querySelectorAll('.nav-label');
-  const navKeys=['navAroma','navChat','navShop'];
-  navLabels.forEach((el,i)=>{if(navKeys[i])el.textContent=t(navKeys[i]);});
-
-  /* Re-render dynamic content */
-  renderAromaBubbles();
-  renderCatTabs();
-  renderProducts();
-  renderCombos();
-  renderAccessories();
-  renderChips();
-  renderCartDrawer();
-
-  /* If questionnaire is active, re-render current question */
-  if($('p-questions').classList.contains('active')&&questions[currentQ]){renderQ();}
-
-  /* If results are showing, re-render */
-  if($('p-results').classList.contains('active')&&answers.length===questions.length){showResults();}
+  ['navAroma','navChat','navShop'].forEach((k,i)=>{if(navLabels[i])navLabels[i].textContent=t(k);});
+  renderAromaBubbles();renderCatTabs();renderProducts();renderCombos();renderAccessories();renderChips();renderCartDrawer();
+  if($('p-questions').classList.contains('active')&&questions[currentQ])renderQ();
+  if($('p-results').classList.contains('active')&&answers.length===questions.length)showResults();
 }
 
 async function init(){
@@ -755,7 +855,7 @@ init();
 function showToast(msg){const tt=$('toast');tt.textContent=msg;tt.classList.add('show');setTimeout(()=>tt.classList.remove('show'),2200);}
 
 function renderAromaBubbles(){
-  const b=[{c:'var(--yellow)',k:'bubbleSun'},{c:'var(--red)',k:'bubbleWarm'},{c:'var(--blue)',k:'bubbleCalm'},{c:'var(--green)',k:'bubbleForest'},{c:'var(--white)',k:'bubbleZen'}];
+  const b=[{c:'var(--red)',k:'bubbleWarm'},{c:'var(--blue)',k:'bubbleCalm'},{c:'var(--green)',k:'bubbleForest'}];
   $('aroma-ring').innerHTML=b.map(x=>`<div class="aroma-bubble" style="background:${x.c}18;border:2px solid ${x.c};color:${x.c}">${t(x.k)}</div>`).join('');
 }
 
@@ -774,10 +874,7 @@ function renderCatTabs(){
 }
 
 function renderChips(){
-  const cd=[
-    {k:'chipSleep',q:'chipQSleep'},{k:'chipStress',q:'chipQStress'},{k:'chipMeditate',q:'chipQMeditate'},
-    {k:'chipSafety',q:'chipQSafety'},{k:'chipProducts',q:'chipQProducts'}
-  ];
+  const cd=[{k:'chipSleep',q:'chipQSleep'},{k:'chipStress',q:'chipQStress'},{k:'chipMeditate',q:'chipQMeditate'},{k:'chipSafety',q:'chipQSafety'},{k:'chipProducts',q:'chipQProducts'}];
   $('chips').innerHTML=cd.map(c=>`<button class="chip" data-q="${t(c.q)}">${t(c.k)}</button>`).join('');
   $('chips').querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>sendMessage(c.dataset.q)));
 }
@@ -789,7 +886,6 @@ function renderInitialChat(){
   $('chat-msgs').appendChild(d);chatHistory=[];
 }
 
-// Navigation
 document.querySelectorAll('.nav-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
@@ -804,7 +900,6 @@ function goToPage(id){
 
 function showPhase(id){document.querySelectorAll('#page1 .phase').forEach(p=>p.classList.remove('active'));const el=$(id);el.style.animation='none';el.offsetHeight;el.style.animation='';el.classList.add('active');}
 
-// Camera
 async function startCamera(){
   try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:320},height:{ideal:320}},audio:false});video.srcObject=stream;await new Promise(r=>{video.onloadedmetadata=()=>{video.play().then(r).catch(r);};});return true;}catch(e){return false;}
 }
@@ -834,7 +929,6 @@ function skipScan(){
   $('scan-status').style.display='none';$('btn-skip').style.display='none';$('mood-box').style.display='flex';
 }
 
-// Questions
 function startQuestions(){answers=[];currentQ=0;showPhase('p-questions');renderQ();}
 function renderQ(){
   const q=questions[currentQ];
@@ -851,24 +945,235 @@ function pickAnswer(idx){
 
 function computeScores(){
   const mi=moodKeys.indexOf(detectedMood);
-  return products.map(a=>{let s=a.ms[mi]*2;answers.forEach((ans,qi)=>{s+=a.qs[qi][ans];});return{aroma:a,score:s};}).sort((a,b)=>b.score-a.score);
+  const filtered=products.filter(p=>RESULT_IDS.includes(p.id));
+  return filtered.map(a=>{let s=a.ms[mi]*2;answers.forEach((ans,qi)=>{s+=a.qs[qi][ans];});return{aroma:a,score:s};}).sort((a,b)=>b.score-a.score);
 }
 function showResults(){
-  const scored=computeScores().slice(0,3);
+  const scored=computeScores();
+  resultScored=scored;
   const roles=[t('rolePrimary'),t('roleSupport'),t('roleBalance')];
   const roleBg=['rgba(201,169,110,.15)','rgba(255,255,255,.08)','rgba(255,255,255,.06)'];
   const m=moodMap[detectedMood];$('rm-e').textContent=m.emoji;$('rm-l').textContent=L(m.label);$('rm-d').textContent=L(m.desc);
   const feelKeys=['feelRelax','feelEnergy','feelFocus','feelWarmth','feelBalance'];
   $('res-intro').textContent=t('resIntro').replace('{mood}',L(m.label)).replace('{feel}',t(feelKeys[answers[4]||0]));
+
+  resultDrops={r:0,b:0,g:0};
+  scored.forEach((item,i)=>{
+    const id=item.aroma.id;
+    if(id==='warmheart')resultDrops.r=DROP_AMOUNTS[i];
+    else if(id==='serenity')resultDrops.b=DROP_AMOUNTS[i];
+    else if(id==='forest')resultDrops.g=DROP_AMOUNTS[i];
+  });
+
   const oc=$('oil-container');oc.innerHTML='';
-  scored.forEach((item,i)=>{const a=item.aroma;const d=document.createElement('div');d.className='oil-card';
-    d.innerHTML=`<span class="oc-badge" style="background:${roleBg[i]};color:${a.color}">${roles[i]}</span><div class="oc-top"><div class="oc-dot" style="background:${a.color}22;border:2px solid ${a.color}"><span style="color:${a.color}">✦</span></div><div><div class="oc-name" style="color:${a.color}">${L(a.name)} <span style="font-size:.7rem;color:var(--gold-dim);font-weight:500;">USD $${a.price}</span></div><div style="font-size:.7rem;color:#888;margin-top:1px;">${L(a.ingredients)}</div></div></div><div class="oc-desc">${L(a.desc)}</div><div class="oc-tags">${L(a.benefits).map(b=>`<span class="oc-tag">${b}</span>`).join('')}</div>`;
+  scored.forEach((item,i)=>{const a=item.aroma;const drp=DROP_AMOUNTS[i];const d=document.createElement('div');d.className='oil-card';
+    d.innerHTML=`<span class="oc-badge" style="background:${roleBg[i]};color:${a.color}">${roles[i]} · ${drp} ${drp>1?t('drops'):t('drop')}</span><div class="oc-top"><div class="oc-dot" style="background:${a.color}22;border:2px solid ${a.color}"><span style="color:${a.color}">✦</span></div><div><div class="oc-name" style="color:${a.color}">${L(a.name)} <span style="font-size:.7rem;color:var(--gold-dim);font-weight:500;">USD $${a.price}</span></div><div style="font-size:.7rem;color:#888;margin-top:1px;">${L(a.ingredients)}</div></div></div><div class="oc-desc">${L(a.desc)}</div><div class="oc-tags">${L(a.benefits).map(b=>`<span class="oc-tag">${b}</span>`).join('')}</div>`;
     oc.appendChild(d);
   });
+
   const a1=scored[0].aroma,a2=scored[1].aroma,a3=scored[2].aroma;
   const mKey='method'+(answers[3]||4);
-  $('blend-card').innerHTML=`<div class="blend-title">${t('blendRatio')}</div><div class="blend-recipe"><strong style="color:${a1.color}">${L(a1.name)}</strong> 3 ${t('drops')} ＋ <strong style="color:${a2.color}">${L(a2.name)}</strong> 2 ${t('drops')} ＋ <strong style="color:${a3.color}">${L(a3.name)}</strong> 1 ${t('drop')}</div><div class="blend-use"><strong>${t('blendUsage')}</strong><br>${t(mKey)}<br><br><strong>${t('blendTips')}</strong><br>• ${t('blendTip1')}<br>• ${t('blendTip2')}</div>`;
+  $('blend-card').innerHTML=`<div class="blend-title">${t('blendRatio')}</div><div class="blend-recipe"><strong style="color:${a1.color}">${L(a1.name)}</strong> ${DROP_AMOUNTS[0]} ${t('drops')} ＋ <strong style="color:${a2.color}">${L(a2.name)}</strong> ${DROP_AMOUNTS[1]} ${t('drops')} ＋ <strong style="color:${a3.color}">${L(a3.name)}</strong> ${DROP_AMOUNTS[2]} ${t('drop')}</div><div class="blend-use"><strong>${t('blendUsage')}</strong><br>${t(mKey)}<br><br><strong>${t('blendTips')}</strong><br>• ${t('blendTip1')}<br>• ${t('blendTip2')}</div>`;
+
+  renderEspPreview();
   showPhase('p-results');
+}
+
+/* ═══════════════════════════════════════
+   ★★★ ESP32 CONTROL — ENHANCED ★★★
+   ═══════════════════════════════════════ */
+
+function renderEspPreview(){
+  const colorMap={
+    warmheart:{dot:'#E8526E',key:'r',label:'🔴'},
+    serenity:{dot:'#5B8DEE',key:'b',label:'🔵'},
+    forest:{dot:'#4CAF7A',key:'g',label:'🟢'}
+  };
+
+  let html='';
+  resultScored.forEach(item=>{
+    const id=item.aroma.id;
+    const cm=colorMap[id];
+    const drp=resultDrops[cm.key];
+    html+=`<div class="esp-drop-item">
+      <div class="esp-drop-dot" style="background:${cm.dot}"></div>
+      <span class="esp-drop-name">${cm.label} ${L(item.aroma.name)}</span>
+      <span class="esp-drop-val" id="esp-val-${cm.key}">${drp}</span>
+      <div class="esp-adj-row">
+        <div class="esp-drop-adj">
+          <button onclick="adjustEspDrop('${cm.key}',-1)">−</button>
+          <button onclick="adjustEspDrop('${cm.key}',+1)">+</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  $('esp-preview').innerHTML=html;
+
+  updateEspFormatInfo();
+  updateEspTotalDrops();
+  $('esp-status').textContent='';
+  $('esp-cooldown').textContent='';
+}
+
+function adjustEspDrop(key, delta){
+  resultDrops[key]=Math.max(0, Math.min(10, resultDrops[key]+delta));
+  const valEl=$('esp-val-'+key);
+  if(valEl) valEl.textContent=resultDrops[key];
+  updateEspFormatInfo();
+  updateEspTotalDrops();
+}
+
+function updateEspFormatInfo(){
+  const ip=$('esp32-ip').value.trim()||'172.20.10.2';
+  $('esp-format-info').textContent=t('espFormatPrefix')+`http://${ip}/formula?red=${resultDrops.r}&green=${resultDrops.g}&blue=${resultDrops.b}`;
+}
+
+function updateEspTotalDrops(){
+  const total=resultDrops.r+resultDrops.b+resultDrops.g;
+  $('esp-total-drops').innerHTML=t('espTotalDrops').replace('{n}',total);
+}
+
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='esp32-ip') updateEspFormatInfo();
+});
+
+/* ── Test ESP32 Connection ── */
+async function testESP32(){
+  const ip=$('esp32-ip').value.trim();
+  if(!ip){showToast(t('espNoIP'));return;}
+
+  const btn=$('esp-test-btn');
+  const statusEl=$('esp-status');
+  btn.disabled=true;
+  $('esp-test-label').textContent=t('espTesting');
+  statusEl.textContent='';
+
+  try{
+    const controller=new AbortController();
+    const tid=setTimeout(()=>controller.abort(),4000);
+    /* Try CORS first to read response */
+    let ok=false;
+    try{
+      const res=await fetch(`http://${ip}/`,{signal:controller.signal,cache:'no-store'});
+      clearTimeout(tid);
+      ok=true;
+    }catch(e1){
+      /* CORS blocked — try no-cors (opaque response = still reachable) */
+      try{
+        const controller2=new AbortController();
+        const tid2=setTimeout(()=>controller2.abort(),4000);
+        await fetch(`http://${ip}/`,{mode:'no-cors',signal:controller2.signal,cache:'no-store'});
+        clearTimeout(tid2);
+        ok=true;
+      }catch(e2){ok=false;}
+    }
+    if(ok){
+      statusEl.textContent=t('espTestOK');
+      statusEl.style.color='var(--green)';
+      showToast(t('espTestOK'));
+    }else{throw new Error('unreachable');}
+  }catch(e){
+    statusEl.textContent=t('espTestFail');
+    statusEl.style.color='var(--red)';
+    showToast(t('espTestFail'));
+  }
+  btn.disabled=false;
+  $('esp-test-label').textContent=t('espTestLabel');
+}
+
+/* ── Send drops to ESP32 ── */
+async function sendToESP32(){
+  const ip=$('esp32-ip').value.trim();
+  if(!ip){showToast(t('espNoIP'));return;}
+
+  const total=resultDrops.r+resultDrops.b+resultDrops.g;
+  if(total===0){showToast(t('espNoDrops'));return;}
+
+  if(espCooldownSec>0){
+    showToast(t('espCooldown').replace('{n}',espCooldownSec));
+    return;
+  }
+
+  const btn=$('esp-send-btn');
+  const statusEl=$('esp-status');
+  btn.disabled=true;
+  btn.classList.add('sending');
+  btn.classList.remove('success','error');
+  $('esp-send-label').textContent=t('espSending');
+  statusEl.textContent='';
+  statusEl.style.color='#888';
+
+  const url=`http://${ip}/formula?red=${resultDrops.r}&green=${resultDrops.g}&blue=${resultDrops.b}`;
+  let success=false;
+  let responseText='';
+  let isBusy=false;
+
+  /* Strategy: try CORS first (to read body), then no-cors as fallback */
+  try{
+    const controller=new AbortController();
+    const tid=setTimeout(()=>controller.abort(),6000);
+    const res=await fetch(url,{signal:controller.signal,cache:'no-store'});
+    clearTimeout(tid);
+    responseText=await res.text();
+    if(responseText.toUpperCase().indexOf('BUSY')!==-1){
+      isBusy=true;
+    }else{
+      success=true;
+    }
+  }catch(corsErr){
+    /* CORS failed — try no-cors (request still reaches ESP32) */
+    try{
+      const controller2=new AbortController();
+      const tid2=setTimeout(()=>controller2.abort(),6000);
+      await fetch(url,{mode:'no-cors',signal:controller2.signal,cache:'no-store'});
+      clearTimeout(tid2);
+      success=true;
+      responseText='(no-cors: response hidden)';
+    }catch(noCorsErr){
+      success=false;
+    }
+  }
+
+  if(isBusy){
+    btn.classList.remove('sending');
+    btn.classList.add('error');
+    statusEl.textContent=t('espBusy');
+    statusEl.style.color='var(--yellow)';
+    showToast(t('espBusy'));
+    setTimeout(()=>{btn.classList.remove('error');btn.disabled=false;$('esp-send-label').textContent=t('espSendLabel');},3000);
+    return;
+  }
+
+  if(success){
+    btn.classList.remove('sending');
+    btn.classList.add('success');
+    statusEl.textContent=t('espSent')+(responseText&&responseText.indexOf('no-cors')===-1?' — '+t('espResponse')+responseText:'');
+    statusEl.style.color='var(--green)';
+    showToast(t('espSent'));
+
+    /* Cooldown: prevent rapid re-sends (10 sec) */
+    espCooldownSec=10;
+    $('esp-cooldown').textContent=t('espCooldown').replace('{n}',espCooldownSec);
+    espCooldownTimer=setInterval(()=>{
+      espCooldownSec--;
+      if(espCooldownSec<=0){
+        clearInterval(espCooldownTimer);espCooldownTimer=null;
+        $('esp-cooldown').textContent='';
+        btn.classList.remove('success');
+        btn.disabled=false;
+        $('esp-send-label').textContent=t('espSendLabel');
+      }else{
+        $('esp-cooldown').textContent=t('espCooldown').replace('{n}',espCooldownSec);
+      }
+    },1000);
+  }else{
+    btn.classList.remove('sending');
+    btn.classList.add('error');
+    statusEl.textContent=t('espFail');
+    statusEl.style.color='var(--red)';
+    showToast(t('espFail'));
+    setTimeout(()=>{btn.classList.remove('error');btn.disabled=false;$('esp-send-label').textContent=t('espSendLabel');},3000);
+  }
 }
 
 $('btn-start').onclick=()=>{modelsLoaded?startScan():skipScan();showPhase('p-scan');};
@@ -899,13 +1204,13 @@ function getFallbackReply(txt){
     if(txt.includes('sleep')||txt.includes('insomnia')||txt.includes('失眠')||txt.includes('睡'))return '🌙 改善睡眠推薦「寧靜」（藍色瓶）。薰衣草 + 洋甘菊 + 檀香。\n\nUSD $20 / 10ml\n\n睡前 30 分鐘擴香 💤';
     if(txt.includes('stress')||txt.includes('壓力')||txt.includes('紓壓'))return '😌 推薦「寧靜」(USD $20) 或「暖心」(USD $22)。\n\n工作休息時深呼吸幾次 🌿';
     if(txt.includes('meditat')||txt.includes('冥想'))return '🧘「冥想」— 乳香 + 雪松 + 鼠尾草。\nUSD $21 / 10ml\n\n冥想前 5 分鐘開始擴香 ✨';
-    if(txt.includes('product')||txt.includes('產品')||txt.includes('介紹'))return `🌿 五款核心產品：\n🟡 陽光 — USD $18\n🔴 暖心 — USD $22\n🔵 寧靜 — USD $20\n🟢 森呼吸 — USD $16\n⚪ 冥想 — USD $21`;
+    if(txt.includes('product')||txt.includes('產品')||txt.includes('介紹'))return '🌿 五款核心產品：\n🟡 陽光 — USD $18\n🔴 暖心 — USD $22\n🔵 寧靜 — USD $20\n🟢 森呼吸 — USD $16\n⚪ 冥想 — USD $21';
     return '🌿 謝謝你的提問！可以告訴我更多你的需求嗎？😊';
   }
   if(txt.includes('sleep')||txt.includes('insomnia'))return '🌙 For sleep, try "Serenity" (blue bottle). Lavender + Chamomile + Sandalwood.\n\nUSD $20 / 10ml\n\nDiffuse 30 min before bed 💤';
   if(txt.includes('stress'))return '😌 Try "Serenity" (USD $20) or "Warmheart" (USD $22).\n\nTake a few deep breaths during breaks 🌿';
   if(txt.includes('meditat'))return '🧘 "Meditation" — Frankincense + Cedarwood + Sage.\nUSD $21 / 10ml\n\nDiffuse 5 min before meditation ✨';
-  if(txt.includes('product'))return `🌿 Five core products:\n🟡 Sunshine — USD $18\n🔴 Warmheart — USD $22\n🔵 Serenity — USD $20\n🟢 Forest Breath — USD $16\n⚪ Meditation — USD $21`;
+  if(txt.includes('product'))return '🌿 Five core products:\n🟡 Sunshine — USD $18\n🔴 Warmheart — USD $22\n🔵 Serenity — USD $20\n🟢 Forest Breath — USD $16\n⚪ Meditation — USD $21';
   return '🌿 Thanks for asking! Tell me more about your needs 😊';
 }
 chatSend.onclick=()=>sendMessage(chatInput.value);
@@ -960,19 +1265,11 @@ function renderAccessories(){
   });
 }
 
-// Product Modal
 function openProductModal(id){
   const p=products.find(x=>x.id===id);if(!p)return;modalQty=1;
   $('ms-hero').innerHTML=`<div class="ms-glow" style="background:${p.color};"></div><div style="animation:float 3s ease-in-out infinite;">${bottleHTML(p.color,'big')}</div>`;
   const revs=p.reviews.map(r=>`<div class="ms-review"><div class="rv-top"><span class="rv-name">${r.name}</span><span class="rv-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span></div><div class="rv-text">${L(r.text)}</div></div>`).join('');
-  $('ms-body').innerHTML=`
-    <div class="ms-name" style="color:${p.color}">${L(p.name)}</div>
-    <div class="ms-en">${p.capacity}</div>
-    <div class="ms-tagline" style="background:${p.color}15;color:${p.color};border:1px solid ${p.color}30;">${L(p.tagline)}</div>
-    <div class="ms-ingredients"><strong>${t('ingredients')}</strong>${L(p.ingredients)}</div>
-    <div class="ms-desc">${L(p.desc)}</div>
-    <div class="ms-benefits">${L(p.benefits).map(b=>`<span class="ms-benefit">${b}</span>`).join('')}</div>
-    <div class="ms-reviews"><h4>${t('reviews')}</h4>${revs}</div>`;
+  $('ms-body').innerHTML=`<div class="ms-name" style="color:${p.color}">${L(p.name)}</div><div class="ms-en">${p.capacity}</div><div class="ms-tagline" style="background:${p.color}15;color:${p.color};border:1px solid ${p.color}30;">${L(p.tagline)}</div><div class="ms-ingredients"><strong>${t('ingredients')}</strong>${L(p.ingredients)}</div><div class="ms-desc">${L(p.desc)}</div><div class="ms-benefits">${L(p.benefits).map(b=>`<span class="ms-benefit">${b}</span>`).join('')}</div><div class="ms-reviews"><h4>${t('reviews')}</h4>${revs}</div>`;
   $('ms-actions').innerHTML=`<span class="ms-price-tag"><span class="cur-label">USD </span>$${p.price}</span><div class="ms-qty"><button onclick="changeModalQty(-1)">−</button><span class="qty-num" id="modal-qty">1</span><button onclick="changeModalQty(1)">+</button></div><button class="ms-add-btn" onclick="addToCart('${p.id}',modalQty);closeProductModal();">${t('addBtn')}</button>`;
   $('product-modal').classList.add('show');
 }
@@ -988,7 +1285,7 @@ function changeModalQty(d){modalQty=Math.max(1,modalQty+d);const el=$('modal-qty
 $('ms-close').onclick=closeProductModal;
 $('product-modal').addEventListener('click',e=>{if(e.target===$('product-modal'))closeProductModal();});
 
-// Cart — store only id, type, qty; look up names at render time
+// Cart
 function getItemName(c){
   if(c.type==='product'){const p=products.find(x=>x.id===c.id);return p?L(p.name):c.id;}
   if(c.type==='accessory'){const a=accessories.find(x=>x.id===c.id);return a?L(a.name):c.id;}
@@ -1001,7 +1298,6 @@ function getItemTag(c){
   if(c.type==='combo'){const cb=combos.find(x=>x.id===c.id);return cb?t('setItems').replace('{n}',cb.items.length):'';}
   return '';
 }
-
 function addToCart(id,qty){
   const p=products.find(x=>x.id===id);if(!p)return;
   const exist=cart.find(c=>c.id===id&&c.type==='product');
@@ -1024,14 +1320,12 @@ function removeFromCart(idx){cart.splice(idx,1);updateCartUI();}
 function changeCartQty(idx,d){cart[idx].qty=Math.max(1,cart[idx].qty+d);updateCartUI();}
 function getCartTotal(){return cart.reduce((s,c)=>s+c.price*c.qty,0);}
 function getCartCount(){return cart.reduce((s,c)=>s+c.qty,0);}
-
 function updateCartUI(){
   const count=getCartCount();
   const nb=$('nav-badge');nb.textContent=count;nb.style.display=count>0?'flex':'none';
   $('fc-badge').textContent=count;updateFloatCart();renderCartDrawer();
 }
 function updateFloatCart(){$('float-cart').style.display=(getCartCount()>0&&$('page3').classList.contains('active'))?'flex':'none';}
-
 function renderCartDrawer(){
   const items=$('cd-items');const total=getCartTotal();const count=getCartCount();
   if(cart.length===0){
@@ -1049,12 +1343,10 @@ function renderCartDrawer(){
     ${total<FREE_SHIP&&total>0?`<div class="cd-row"><span style="color:var(--gold);font-size:.7rem;">USD $${FREE_SHIP-total} ${t('cartMoreFree')}</span><span></span></div>`:''}
     <div class="cd-row total"><span>${t('cartTotal')}</span><span>USD $${total+shipping}</span></div>`;
 }
-
 function openCart(){$('cart-overlay').classList.add('show');$('cart-drawer').classList.add('open');renderCartDrawer();}
 function closeCart(){$('cart-overlay').classList.remove('show');$('cart-drawer').classList.remove('open');}
 $('float-cart').onclick=openCart;$('cd-close').onclick=closeCart;$('cart-overlay').onclick=closeCart;
 
-// Checkout
 function renderCheckoutBody(){
   const total=getCartTotal();const shipping=total>=FREE_SHIP?0:5;
   $('ck-body').innerHTML=`
@@ -1105,7 +1397,6 @@ function submitOrder(){
 }
 $('btn-success-ok').onclick=()=>$('success-modal').classList.remove('show');
 
-// Prevent body scroll when modals are open (iOS fix)
 document.addEventListener('touchmove',function(e){
   if($('product-modal').classList.contains('show')||$('cart-drawer').classList.contains('open')||$('checkout-modal').classList.contains('show')||$('success-modal').classList.contains('show')){
     const scrollable=e.target.closest('.modal-sheet,.cd-items,.ck-box');
